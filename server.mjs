@@ -458,10 +458,11 @@ const server = http.createServer((req, res) => {
 // scores timeouts on every task.
 process.on('uncaughtException', (e) => log(`[fatal-guard] uncaughtException: ${e.message}`));
 process.on('unhandledRejection', (e) => log(`[fatal-guard] unhandledRejection: ${e && e.message}`));
-
-// Exported for serverless hosts (the Vercel adapter in api/agent.mjs emits
-// requests into this server). A direct `node server.mjs` run listens as before.
+// Exported for serverless hosts: Vercel's Node runtime takes this file as
+// the app entry and requires the http.Server as the default export. A direct
+// `node server.mjs` run listens as before.
 export { server };
+export default server;
 
 const runDirectly = process.argv[1] !== undefined && import.meta.url === new URL(`file://${process.argv[1]}`).href;
 if (runDirectly) {
